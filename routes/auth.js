@@ -5,6 +5,8 @@ const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
 const twilio = require('twilio')
+require('dotenv').config()
+
 
 
 const JWT_SECRET = "secretjwtstring"
@@ -56,8 +58,8 @@ router.post('/sendotp',[
     const {phone} = req.body; 
     console.log(phone,'phone')
     const otp = generateRandom4DigitNumber();
-    const accountSid = "AC94ebeb0fb991e18d794ecc92ae6691ea";
-    const authToken = "8bd47f01bd24da241d8a43a6985b6f80";
+    const accountSid = process.env.ACCOUNTSID;
+    const authToken = process.env.AUTHTOKEN;
     const client =new twilio(accountSid, authToken);
     
     client.messages
