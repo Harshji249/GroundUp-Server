@@ -13,5 +13,25 @@
     "mongodb": "^6.4.0",
     "mongoose": "^8.2.0",
     "twilio": "^5.0.1"
-  }
+  },
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "build": "npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Harshji249/GroundUp-Server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Harshji249/GroundUp-Server/issues"
+  },
+  "homepage": "https://github.com/Harshji249/GroundUp-Server#readme",
+  "description": ""
 }
