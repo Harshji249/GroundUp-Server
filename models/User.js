@@ -5,21 +5,21 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    password:{
+        type:String,
+        required:true
+    },
     address:{
         type: String,
-        required: true
     },
     city:{
         type: String,
-        required: true
     },
     state:{
         type: String,
-        required: true
     },
     pincode: {
         type: String,
-        required: true,
     },
     email:{
         type: String,
@@ -28,8 +28,10 @@ const userSchema = new mongoose.Schema({
     },
     phone:{
         type:String,
-        required:true,
-        unique:true
+    },
+    activegrounds: {
+        type: Array,
+        default: []
     },
     date: {
         type: Date,

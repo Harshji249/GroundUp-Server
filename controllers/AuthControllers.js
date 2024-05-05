@@ -4,51 +4,31 @@ const Admin = require('../models/Admin')
 const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs')
-const twilio = require('twilio')
-const { generateOTP } = require('../utility')
 
 const JWT_SECRET = "secretjwtstring"
 
-const sendOTP = async (req,res)=>{
-    const {phone} = req.body; 
-    const otp = generateOTP();
-    const accountSid = "AC94ebeb0fb991e18d794ecc92ae6691ea";
-    const authToken = "eabd78aee43b65b19bd8f8efe2fc7d0f";
-    const client = new twilio(accountSid, authToken);
-    
-    try {
-        const twilioRes = await client.messages.create({ 
-            body: `Your OTP for GroundUp is ${otp}`, 
-            to: `+91${phone}`, 
-            from: "+1 833 322 5144" 
-        });
-        return res.status(200).json({ message: `OTP ${otp} sent successfully` });
-    } catch (err) {
-        console.error("Error sending OTP:", err);
-        return res.status(500).json({ message: "Internal server error" });
-    }
-}
-
-const validuser = async(req,res)=>{
+const loginuser = async(req,res)=>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
     }
     try{
-        const {phone} = req.body;
-        const user = User.findOne({phone});
-        if(user){
-            const data = {
-                user: {
-                    id: user.id
-                }
+        const {email, password} = req.body;
+        let user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ error: "Loggin with correct credentials" })
+        }
+        const passwordCompare = await bcrypt.compare(password, user.password)
+        if (!passwordCompare) {
+            return res.status(400).json({ error: "Loggin with correct credentials" })
+        }
+        const data = {
+            user: {
+                id: user.id
             }
-            const authToken = jwt.sign(data, JWT_SECRET);
-            return res.status(200).json({message:"User with these credentials already exists", authToken});
         }
-        else{
-            return res.status(201).json({message:'New User'});
-        }
+        const authToken = jwt.sign(data, JWT_SECRET);
+        res.json({ authToken, admin, rejistered:true })
     }
     catch(err){
         return res.status(500).json({message:"Internal Server Error"});
@@ -62,8 +42,40 @@ const registeruser = async (req,res)=>{
     }
 
     try{
-        const {name,address,city,state,pincode,email, phone} = req.body;
-        let user = new User({ name, address, city,state, pincode,phone,email });
+        const {name,address,city,state,pincode, phone} = req.body;
+        const updateUser = {}
+        if(name)updateUser.name= name
+        if(address)updateUser.address= address
+        if(city)updateUser.city= city
+        if(state)updateUser.state= state
+        if(pincode)updateUser.pincode= pincode
+        if(phone)updateUser.phone= phone
+
+        let user =await User.findById(req.params.id);
+        if(!user) res.status(404).send('Not Found');
+        user = await User.findByIdAndUpdate(req.params.id,{$set:updateUser}, {new:true})
+        res.status(200).json({ data:user, registered: true })
+    }
+    catch(err){
+        return res.status(500).json({message:"Internal Server Error"});
+    }
+}
+
+const signupuser =  async (req,res)=>{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() })
+    }
+    try{
+        console.log('request, recieves')
+        const { name,email,password } = req.body; 
+        const userEmail = await User.findOne({email})
+        if (userEmail) {
+            return res.status(400).json({ error: "User with this email already exists" })
+        }
+        const salt = await bcrypt.genSalt(10);
+        const secPass = await bcrypt.hash(password, salt)
+        let user = new User({ name: name, email: email, password: secPass });
         user = await user.save()
         const data = {
             user: {
@@ -71,27 +83,7 @@ const registeruser = async (req,res)=>{
             }
         }
         const authToken = jwt.sign(data, JWT_SECRET);
-        res.status(200).json({ authToken })
-    }
-    catch(err){
-        return res.status(500).json({message:"Internal Server Error"});
-    }
-}
-
-const signup =  async (req,res)=>{
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() })
-    }
-    try{
-        const { email } = req.body; 
-        const user = await User.findOne({email})
-        if(user){
-            return res.status(400).json({message:"User with these credentials already exists"})
-        }
-       else{
-        return res.status(201).json({message:'New User'})
-       }
+        res.status(200).json({message:'User created successfuly', authToken, registered:false })
     }
     catch(err){
         console.error(err.message)
@@ -163,9 +155,8 @@ const loginadmin = async (req,res)=>{
 
 
 module.exports ={
-    sendOTP,
-    validuser,
-    signup,
+    loginuser,
+    signupuser,
     registeruser,
     registeradmin,
     loginadmin

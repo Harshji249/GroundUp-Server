@@ -1,43 +1,48 @@
 const mongoose = require('mongoose');
 
-const activeSchema = new mongoose.Schema({
-    userId: {
+const timeslotSchema = new mongoose.Schema({
+    startTime: {
         type: String,
         required: true
     },
-    groundId:{
+    endTime:{
         type:String,
         required:true
     },
-    code: {
+    price: {
         type: String,
         required: true
     },
 });
 
-const adminSchema = new mongoose.Schema({
+const groundSchema = new mongoose.Schema({
+    admin: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'admin'
+    },
+    file: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true
     },
-    email:{
+    address:{
         type: String,
         required: true,
         unique: true
     },
-    password:{
+    description:{
         type:String,
         required:true,
     },
+    timeSlot: [timeslotSchema],
     date: {
         type: Date,
         default: Date.now
     },
-    activeGround:{activeSchema},
-    totalEarnings: {
-        type:Number
-    }
 })
-const admin = mongoose.model("Admin", adminSchema)
-admin.createIndexes
-module.exports = admin
+const ground = mongoose.model("Ground", groundSchema)
+ground.createIndexes
+module.exports = ground
