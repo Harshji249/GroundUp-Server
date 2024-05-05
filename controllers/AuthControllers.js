@@ -86,7 +86,7 @@ const signupuser =  async (req,res)=>{
         res.status(200).json({message:'User created successfuly', authToken, registered:false })
     }
     catch(err){
-        console.error(err.message)
+        console.error(err)
         res.status(500).send("Internal server error occured")
     }
 }
@@ -114,7 +114,7 @@ const registeradmin = async (req,res)=>{
             }
         }
         const authToken = jwt.sign(data, JWT_SECRET);
-        res.status(200).json({message:'Admin created successfuly', authToken })
+        res.status(200).json({message:'Admin created successfuly', authToken , data})
     }
     catch (err) {
         console.error(err.message)

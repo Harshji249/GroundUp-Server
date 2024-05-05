@@ -20,7 +20,7 @@ const groundSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'admin'
     },
-    file: {
+    image: {
         type: String,
         required: true
     },
