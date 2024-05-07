@@ -114,7 +114,7 @@ const registeradmin = async (req,res)=>{
             }
         }
         const authToken = jwt.sign(data, JWT_SECRET);
-        res.status(200).json({message:'Admin created successfuly', authToken , data})
+        res.status(200).json({message:'Admin created successfuly', authToken , admin})
     }
     catch (err) {
         console.error(err.message)
