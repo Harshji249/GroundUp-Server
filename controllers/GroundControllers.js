@@ -17,6 +17,7 @@ const addGround = async(req,res)=>{
     }
     try{
         const {name, description,address,timeSlot} = req.body;
+        console.log('request',req)
         const file = req.files.image;
         if (!file) {
             return res.status(400).json({ message: 'No file uploaded' });
@@ -26,7 +27,7 @@ const addGround = async(req,res)=>{
             name,
             description,
             address,
-            timeSlot,
+           timeSlot: JSON.parse(timeSlot),
             image: result.url,
             admin: req.user.id,
         });
@@ -36,6 +37,7 @@ const addGround = async(req,res)=>{
     }) 
     }
     catch(err){
+        console.log(err)
         return res.status(500).json({message:"Internal Server Error"});
     }
 }

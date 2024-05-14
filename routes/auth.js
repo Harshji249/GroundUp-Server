@@ -5,7 +5,6 @@ const { loginuser, registeruser, signupuser } = require('../controllers/AuthCont
 
 //Send OPT using Twilio : POST "/api/auth/sendotp" 
 router.post('/loginuser',[
-    body('phone').isLength({ min: 10, max:10 }),
 ], loginuser)
 
 //Check if user already exists in the db POST "/api/auth/validuser" 

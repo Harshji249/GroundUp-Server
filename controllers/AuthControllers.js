@@ -28,7 +28,7 @@ const loginuser = async(req,res)=>{
             }
         }
         const authToken = jwt.sign(data, JWT_SECRET);
-        res.json({ authToken, admin, rejistered:true })
+        res.json({ authToken, user, rejistered:true })
     }
     catch(err){
         return res.status(500).json({message:"Internal Server Error"});
@@ -83,7 +83,7 @@ const signupuser =  async (req,res)=>{
             }
         }
         const authToken = jwt.sign(data, JWT_SECRET);
-        res.status(200).json({message:'User created successfuly', authToken, registered:false })
+        res.status(200).json({message:'User created successfuly', authToken, registered:false , user})
     }
     catch(err){
         console.error(err)
