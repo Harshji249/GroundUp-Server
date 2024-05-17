@@ -72,9 +72,18 @@ const bookGround = async(req,res)=>{
     }
 }
 
+const myGrounds = async(req,res)=>{
+try{
+    const grounds = await Ground.find({ admin: req.user.id });
+    res.status(200).json({ message:"Your Grounds Listed Successfully", grounds })
+}catch(err){
+    res.status(500).send("Internal server error occured")
+}
+}
 
 module.exports ={
     addGround, 
     fetchAllGrounds,
-    bookGround
+    bookGround,
+    myGrounds
 }
