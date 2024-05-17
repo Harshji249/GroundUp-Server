@@ -1,20 +1,5 @@
 const mongoose = require('mongoose');
 
-const activeSchema = new mongoose.Schema({
-    userId: {
-        type: String,
-        required: true
-    },
-    groundId:{
-        type:String,
-        required:true
-    },
-    code: {
-        type: String,
-        required: true
-    },
-});
-
 const adminSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -33,7 +18,6 @@ const adminSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    activeGround:{activeSchema},
     totalEarnings: {
         type:Number
     }

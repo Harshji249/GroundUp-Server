@@ -13,6 +13,10 @@ const timeslotSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    booked :{
+        type:Boolean,
+        default : false
+    }
 });
 
 const groundSchema = new mongoose.Schema({

@@ -11,12 +11,7 @@ router.post('/loginuser',[
 
 //Add a new user in the dataBase: POST "/api/auth/registeruser" 
 router.put('/registeruser/:id',[
-    body('name').isLength({ min: 3 }),
-    body('address').isLength({ min: 3 }),
-    body('city').isLength({ min: 3 }),
-    body('state').isLength({ min: 3 }),
-    body('pincode').isLength({ min: 5 }),
-    body('email').isEmail(),
+  
 ], registeruser)
 
 // Signup a new user via mail  : POST "/api/auth/signup"

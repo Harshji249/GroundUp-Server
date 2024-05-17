@@ -42,6 +42,7 @@ const registeruser = async (req,res)=>{
     }
 
     try{
+        console.log('here')
         const {name,address,city,state,pincode, phone} = req.body;
         const updateUser = {}
         if(name)updateUser.name= name

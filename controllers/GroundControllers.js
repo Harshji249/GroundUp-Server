@@ -3,6 +3,7 @@ const Ground = require('../models/Ground')
 const Admin = require('../models/Admin')
 const cloudinary = require('cloudinary').v2
 const { validationResult } = require('express-validator');
+const ActiveGround = require('../models/ActiveGround');
 require('dotenv').config()
 
 cloudinary.config({
@@ -42,9 +43,38 @@ const addGround = async(req,res)=>{
     }
 }
 
+const fetchAllGrounds = async(req,res)=>{
+    try{
+        const grounds = await Ground.find();
+      
+        res.send({message:"All grounds listed successfully", status: 200, grounds })
+    }
+    catch(err){
+        res.status(500).send("Internal server error occured")
+    }
+}
 
+
+const bookGround = async(req,res)=>{
+    try{
+        const {adminId, groundId, code} = req.body;
+        const activeGround = new ActiveGround({
+            userId: req.user.id,
+            adminId:adminId,
+            groundId:groundId,
+            code:code,
+        });
+        const bookedGround = await activeGround.save();
+        return res.status(200).json({bookedGround, message:'Ground Booked Successfully'});
+    }
+    catch(err){
+        res.status(500).send("Internal server error occured")
+    }
+}
 
 
 module.exports ={
     addGround, 
+    fetchAllGrounds,
+    bookGround
 }

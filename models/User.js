@@ -29,10 +29,6 @@ const userSchema = new mongoose.Schema({
     phone:{
         type:String,
     },
-    activegrounds: {
-        type: Array,
-        default: []
-    },
     date: {
         type: Date,
         default: Date.now
